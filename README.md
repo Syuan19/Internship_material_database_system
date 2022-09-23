@@ -9,3 +9,15 @@ Database connection = Mybatis + JDBC<br />
 message transfer = AJAX, REST<br />
 <br />
 ## Some figures related to the system<br />
+### Login page <br />
+![image]()
+<br />
+### Menu page <br />
+![image]()
+<br />
+### Database page <br />
+![image]()
+<br />
+### Database table page <br />
+![image]()
+
