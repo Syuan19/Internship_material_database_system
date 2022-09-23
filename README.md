@@ -13,11 +13,13 @@ message transfer = AJAX, REST<br />
 ![image](https://github.com/Syuan19/Internship_material_database_system/blob/main/figures/%E6%88%AA%E5%B1%8F2022-09-14%2016.18.18.png)
 <br />
 ### Menu page <br />
-![image]()
+![image](https://github.com/Syuan19/Internship_material_database_system/blob/main/figures/%E6%88%AA%E5%B1%8F2022-09-14%2016.18.29.png)
 <br />
 ### Database page <br />
-![image]()
+![image](https://github.com/Syuan19/Internship_material_database_system/blob/main/figures/%E6%88%AA%E5%B1%8F2022-09-14%2016.18.41.png)
 <br />
 ### Database table page <br />
-![image]()
-
+![image](https://github.com/Syuan19/Internship_material_database_system/blob/main/figures/%E6%88%AA%E5%B1%8F2022-09-14%2016.18.53.png)
+<br />
+### File Upload<br />
+![image](https://github.com/Syuan19/Internship_material_database_system/blob/main/figures/%E6%88%AA%E5%B1%8F2022-09-14%2016.19.10.png)
