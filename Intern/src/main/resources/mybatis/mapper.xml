@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.intern.dao.UserDao">
+
+    <!--用户注册与登陆的相关sql语句-->
+    <!--登陆的SQL语句-->
+    <select id="login" resultType="java.lang.Integer">
+        SELECT id from intern.SystemUser where username=#{username} and password=#{password};
+    </select>
+
+    <!--检测用户是否存在-->
+    <select id="userExist" resultType="com.example.intern.pojo.SystemUser">
+        SELECT * from intern.SystemUser where username=#{username};
+    </select>
+
+    <!--用户注册-->
+    <insert id="regist">
+        INSERT into intern.SystemUser(`id`,`username`, `password`) values (0, #{username}, #{password});
+    </insert>
+
+
+
+    <!--第一个界面，与数据库表有关的相关操作-->
+    <!--使用所需要的数据库-->
+    <update id="useDB">
+        use ${dbname};
+    </update>
+
+    <!--新建一个库-->
+    <update id="creatDB" parameterType="String">
+        CREATE DATABASE ${dbname};
+    </update>
+    <!--检测数据库是否存在-->
+    <select id="DBExist" resultType="com.example.intern.pojo.SystemDB">
+        SELECT * from intern.SystemDB where dbname=#{dbname};
+    </select>
+    <!--向数据库表中写入创建的数据库的信息-->
+    <insert id="updateDB">
+        INSERT into intern.SystemDB(`dbname`,`editor`,`edittime`,`note`) values (#{dbname},#{editor},#{edittime}, #{note});
+    </insert>
+
+    <!--搜索与显示当前用户所拥有的数据库-->
+    <select id="showDB" resultType="com.example.intern.pojo.SystemDB">
+        SELECT * FROM intern.SystemDB
+        <where>
+            editor = #{editor}
+            <if test="note != null and note != ''">
+                and `editor` =#{editor}
+                and (`note` like concat('%',#{note},'%')or `dbname` like concat('%',#{note},'%'))
+            </if>
+        </where>
+        limit #{page},#{pageSize};
+    </select>
+    
+    <!--搜索所有的数据量-->
+    <select id="getTotal" resultType="java.lang.Long">
+        SELECT count(*) FROM intern.SystemDB
+        <where>
+            editor = #{editor}
+            <if test="note != null and note != ''">
+                and `editor` =#{editor}
+                and (`note` like concat('%',#{note},'%')or `dbname` like concat('%',#{note},'%'))
+            </if>
+        </where>
+    </select>
+
+    <!--编辑数据库备注名字-->
+    <update id="renameDB">
+        update intern.SystemDB set note = #{note} where id = #{id} and editor = #{editor};
+    </update>
+
+    <!--删除数据库-->
+    <update id="dropDB">
+        DROP database ${dbname};
+    </update>
+    <!--通过id查找相对应的数据库-->
+    <select id="searchDBtroughID" resultType="java.lang.String">
+        select dbname from intern.SystemDB where id =#{id};
+    </select>
+    <!--删除后在数据库表中也将数据删除-->
+    <delete id="deletDBinfo">
+        delete from intern.SystemDB where id=#{id};
+    </delete>
+    <!--通过数据库表id，将Tableinfo表中的数据全部删除-->
+    <delete id="delettableinfothroughtdid">
+        delete from intern.Tableinfo where tableid = #{tableid};
+    </delete>
+    <!--通过数据库id将SystemTable中的表数据删除-->
+    <delete id="deletsystemtablethroughdbid">
+        delete from intern.SystemTable where dbid=#{dbid};
+    </delete>
+
+    <!--通过dbid搜索相对应的数据库表-->
+    <select id="searchtbthroughdbid" resultType="com.example.intern.pojo.SystemTable">
+        select * from intern.SystemTable where dbid=#{dbid};
+    </select>
+
+
+    <!--通过表提供的数据库id搜索数据库-->
+    <select id="tableDB" resultType="com.example.intern.pojo.SystemDB">
+        select * from intern.SystemDB where id =#{id};
+    </select>
+
+    <!--搜索这个editor下所拥有的数据库表-->
+    <select id="showTable" resultType="com.example.intern.pojo.SystemTable">
+        select * from intern.SystemTable
+        <where>
+            editor = #{editor}
+            <!--当只有表搜索框有对应数值的时候-->
+            <if test="(dbname == null or dbname == '') and (tbname !=null and tbname!='')">
+                and editor=#{editor}
+                and tbname like concat('%',#{tbname},'%')
+            </if>
+            <!--当只有库搜索框有对应数值的时候-->
+            <if test="(tbname == null or tbname == '') and (dbname !=null and dbname!='')">
+                and editor=#{editor}
+                and dbname like concat('%',#{dbname},'%')
+            </if>
+            <!--当两个搜索框都有对应数值的时候-->
+            <if test="tbname != null and tbname != '' and dbname !=null and dbname!=''">
+                and editor=#{editor}
+                and tbname like concat('%',#{tbname},'%')
+                and dbname like concat('%',#{dbname},'%')
+            </if>
+
+        </where>
+        limit #{page},#{pageSize};
+    </select>
+
+    <!--搜索与表有关的所有数据量-->
+    <select id="getTableTotal" resultType="java.lang.Long">
+        select count(*) from intern.SystemTable
+        <where>
+            editor = #{editor}
+            <!--当只有表搜索框有对应数值的时候-->
+            <if test="(dbname == null or dbname == '') and (tbname !=null and tbname!='')">
+                and editor=#{editor}
+                and tbname like concat('%',#{tbname},'%')
+            </if>
+            <!--当只有库搜索框有对应数值的时候-->
+            <if test="(tbname == null or tbname == '') and (dbname !=null and dbname!='')">
+                and editor=#{editor}
+                and dbname like concat('%',#{dbname},'%')
+            </if>
+            <!--当两个搜索框都有对应数值的时候-->
+            <if test="tbname != null and tbname != '' and dbname !=null and dbname!=''">
+                and editor=#{editor}
+                and tbname like concat('%',#{tbname},'%')
+                and dbname like concat('%',#{dbname},'%')
+            </if>
+
+        </where>
+    </select>
+
+
+    <!--返回所有的数据库名字-->
+    <select id="dbname" resultType="String">
+        select dbname from intern.SystemDB where editor = #{editor};
+    </select>
+
+    <!--不分页展示数据库-->
+    <select id="noPageDB" resultType="com.example.intern.pojo.SystemDB">
+        SELECT * FROM intern.SystemDB where editor = #{editor};
+    </select>
+
+    <!--新建一个只有一列id的数据库表-->
+    <update id="newTable">
+        create table `${tbname}`(
+            `id` int not null AUTO_INCREMENT,
+            primary key (`id`)
+        );
+    </update>
+
+    <!--通过传入的jsonarray中的值新建一个列-->
+    <insert id="newCol">
+        alter table `${tbname}` add `${attricn}` ${attritype}(255) not null;
+    </insert>
+
+    <!--将新建表的列信息传入tableinfo这个表中-->
+    <insert id="updateTableInfo">
+        INSERT into intern.Tableinfo(`attricn`,`attrien`,`attriunit`,`attritype`,`tableid`) values (#{attricn},#{attrien},#{attriunit}, #{attritype},#{tableid});
+    </insert>
+    <!--通过dbname与tbname搜tbid-->
+    <select id="searchtbid" resultType="java.lang.Integer">
+        select id from intern.SystemTable where dbname=#{dbname} and tbname=#{tbname}
+    </select>
+
+    <!--搜索在此数据库下 是否有一样的数据库表明-->
+    <select id="searchTable" resultType="com.example.intern.pojo.SystemTable">
+        select * from intern.SystemTable where dbname = #{dbname} and tbname=#{tbname};
+    </select>
+
+    <!--表创建成功后，将该表的信息写入SystemTable这张表中-->
+    <insert id="updateTable">
+        INSERT into intern.SystemTable(`id`,`tbname`, `editor`,`edittime`,`dbid`,`dbname`,`note`) values (0, #{tbname}, #{editor},#{edittime},#{dbid},#{dbname},#{note});
+    </insert>
+
+    <!--通过数据库名查询相对应的数据库-->
+    <select id="searchDBthroughDBname" resultType="com.example.intern.pojo.SystemDB">
+        select * from intern.SystemDB where dbname=#{dbname};
+    </select>
+
+    <!--通过表id获得Tableinfo对象-->
+    <select id="searchTableinfothroughID" resultType="com.example.intern.pojo.Tableinfo">
+        select * from intern.Tableinfo where tableid =#{tableid};
+    </select>
+
+    <!--通过tbid获得tbname-->
+    <select id="searchTb" resultType="com.example.intern.pojo.SystemTable">
+        select * from intern.SystemTable where id=#{id};
+    </select>
+
+    <!--删除一张数据库表-->
+    <delete id="delettable">
+        DROP TABLE ${tbname};
+    </delete>
+
+    <!--删除SystemTable表中的数据库表信息-->
+    <delete id="deletinfofromSTB">
+        delete from intern.SystemTable where id=#{id};
+    </delete>
+
+    <!--删除Tableinfo与要删除的表的相关信息-->
+    <delete id="deletinfofromTI">
+        delete from intern.Tableinfo where tableid=#{tableid};
+    </delete>
+
+    <!--修改数据库表名-->
+    <update id="renametb">
+        ALTER TABLE `${oldtb}` RENAME `${newtb}`;
+    </update>
+
+    <!--修改SystemTable中的表名字-->
+    <update id="renametbfromST">
+        update intern.SystemTable set tbname = #{tbname} where id = #{id};
+    </update>
+    <!--通过tableid查询所有在Tableinfo中的信息,即这个table目前有多少列-->
+    <select id="countTableinfo" resultType="java.lang.Integer">
+        select count(*) from intern.Tableinfo where tableid=#{tableid};
+    </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>
+
+
