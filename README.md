@@ -10,7 +10,7 @@ message transfer = AJAX, REST<br />
 <br />
 ## Some figures related to the system<br />
 ### Login page <br />
-![image]()
+![image](https://github.com/Syuan19/Internship_material_database_system/blob/main/figures/%E6%88%AA%E5%B1%8F2022-09-14%2016.18.18.png)
 <br />
 ### Menu page <br />
 ![image]()
